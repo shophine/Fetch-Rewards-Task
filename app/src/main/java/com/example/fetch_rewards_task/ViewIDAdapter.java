@@ -25,13 +25,14 @@ public class ViewIDAdapter extends RecyclerView.Adapter<ViewIDAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
+        //setting the layout view
         View view = layoutInflater.inflate(R.layout.row_list_ids,parent,false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        //set the values from the data set to the view
         holder.id.setText(idEntities.get(position).id);
         holder.name.setText(idEntities.get(position).name);
     }
@@ -42,6 +43,7 @@ public class ViewIDAdapter extends RecyclerView.Adapter<ViewIDAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        //initializing the elements of the view to the view holder
         TextView id, name;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

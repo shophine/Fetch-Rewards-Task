@@ -23,32 +23,29 @@ public class ViewIDActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
 
+        //initializing the recycler view
         recyclerView = findViewById(R.id.list_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         Intent intent = getIntent();
+        //getting the value from the intent
         String jsonArray = intent.getStringExtra("data");
 
         try {
             ArrayList<IDEntity> arrayList = new ArrayList<>();
+            //object-mapping
             JSONArray array = new JSONArray(jsonArray);
-           // System.out.println(array.toString(2));
-            //System.out.println(array);
             for(int i=0;i<array.length();i++){
                 JSONObject jsonObject = array.getJSONObject(i);
                 IDEntity idEntity = new IDEntity(jsonObject.getString("id"),jsonObject.getString("name"));
                 arrayList.add(idEntity);
             }
-            //send array list to recycler view
-
-
+            //sending the data list to recycler view for displaying
            ViewIDAdapter viewIDAdapter = new ViewIDAdapter(this,arrayList);
 
+            //setting the recycler view and the adapter
             recyclerView.setLayoutManager(new LinearLayoutManager(ViewIDActivity.this, LinearLayoutManager.VERTICAL,false));
             recyclerView.setAdapter(viewIDAdapter);
-
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();

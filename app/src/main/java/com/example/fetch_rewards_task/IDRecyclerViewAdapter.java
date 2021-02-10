@@ -25,23 +25,24 @@ public class IDRecyclerViewAdapter extends RecyclerView.Adapter<IDRecyclerViewAd
         this.onIDRecyclerViewClickListener = onIDRecyclerViewClickListener;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
+        //setting the layout view
         View view = layoutInflater.inflate(R.layout.id_row,parent,false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        //set the values from the data set to the view
          holder.textView.setText( listIDs.get(position));
          holder.button.setOnClickListener(new View.OnClickListener() {
+             //when viewID button is clicked
             @Override
             public void onClick(View v) {
-                //listIDs = [1,2,3,4]
+
                 onIDRecyclerViewClickListener.OnClick(position);
             }
         });
@@ -54,7 +55,7 @@ public class IDRecyclerViewAdapter extends RecyclerView.Adapter<IDRecyclerViewAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
+        //initializing the elements of the view to the view holder
         TextView textView;
         Button button;
         public ViewHolder(@NonNull View itemView) {
