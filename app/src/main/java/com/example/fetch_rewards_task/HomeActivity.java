@@ -2,10 +2,8 @@ package com.example.fetch_rewards_task;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +13,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -24,11 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAdapter.OnIDRecyclerViewClickListener {
     private RecyclerView recyclerView;
@@ -106,14 +99,20 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
                                 //traversing the json data
                                 for(int i=0;i<jsonArray.length();i++){
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    String nameInList = null;
+                                    if(! jsonObject.isNull("name")){
+                                        nameInList = jsonObject.getString("name");
+                                    }
                                     String idInList = jsonObject.getString("listId");
-                                    String nameInList = jsonObject.getString("name");
+
                                     //check if the listID in the json data and list of listIDs array are same
                                     if(listid.equals(idInList)){
                                         //check if the name field is not null or is not empty
-                                        if(nameInList != null || !nameInList.trim().isEmpty()) {
-                                            //it's a valid data, so add it to the array
-                                            listIDJsonArray.put(jsonObject);
+                                        if(nameInList != null){
+                                            if(!nameInList.trim().isEmpty()){
+                                                //it's a valid data, so add it to the array
+                                                listIDJsonArray.put(jsonObject);
+                                            }
                                         }
                                     }
                                 }
@@ -179,7 +178,7 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
     public void OnClick(int pos) {
         JSONArray jsonArray = groupedJSONOnID.get(pos);
 
-        Intent intent = new Intent(this,IDView.class);
+        Intent intent = new Intent(this, ViewIDActivity.class);
         intent.putExtra("data",jsonArray.toString());
         startActivity(intent);
 
