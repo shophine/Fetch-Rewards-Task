@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAdapter.OnIDRecyclerViewClickListener {
     private RecyclerView recyclerView;
@@ -91,14 +93,46 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
                             Collections.sort(listIDs);
                             //1,2,3,4
 
+                            JSONArray sortedJson = new JSONArray();
+                            List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+                            for(int i=0;i<jsonArray.length();i++){
+                                jsonValues.add(jsonArray.getJSONObject(i));
+                            }
+                            Collections.sort( jsonValues, new Comparator<JSONObject>() {
+                                //You can change "Name" with "ID" if you want to sort by ID
+                                private static final String KEY_NAME = "name";
+
+                                @Override
+                                public int compare(JSONObject a, JSONObject b) {
+                                    String valA = new String();
+                                    String valB = new String();
+
+                                    try {
+                                        valA = a.getString(KEY_NAME);
+                                        valB = b.getString(KEY_NAME);
+                                    }
+                                    catch (JSONException e) {
+                                        //do something
+                                    }
+
+                                    return valA.compareTo(valB);
+                                    //if you want to change the sort order, simply use the following:
+                                    //return -valA.compareTo(valB);
+                                }
+                            });
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                sortedJson.put(jsonValues.get(i));
+                            }
+
+
                             //traversing every listID
                             for (String listid:listIDs) {
 
                                 //creating a json array for every listID
                                 JSONArray listIDJsonArray = new JSONArray();
                                 //traversing the json data
-                                for(int i=0;i<jsonArray.length();i++){
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                for(int i=0;i<sortedJson.length();i++){
+                                    JSONObject jsonObject = sortedJson.getJSONObject(i);
                                     String nameInList = null;
                                     if(! jsonObject.isNull("name")){
                                         nameInList = jsonObject.getString("name");
