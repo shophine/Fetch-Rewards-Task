@@ -17,7 +17,6 @@ Clone this repository and import into Android Studio <br />
 ` git clone https://github.com/shophine/Fetch-Rewards-Task.git`
 
 ## Demo
-* Homepage <br /> ![Homepage](https://github.com/shophine/Fetch-Rewards-Task/blob/master/Demo/Screenshots/Home%20Page.png)
 * List of IDs <br />  ![List of IDs](https://github.com/shophine/Fetch-Rewards-Task/blob/master/Demo/Screenshots/List%20of%20IDs.png)
 * Data sorted by ID and then by name <br />  ![Data sorted by ID and then by name](https://github.com/shophine/Fetch-Rewards-Task/blob/master/Demo/Screenshots/Sorted%20View.png)
 
