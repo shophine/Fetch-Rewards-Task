@@ -20,10 +20,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAdapter.OnIDRecyclerViewClickListener {
     private RecyclerView recyclerView;
@@ -70,13 +73,16 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
                             Collections.sort(listIDs);
 
                             //sorting the data by name
-                            sortDataByName(jsonValues);
+//                            sortDataByName(jsonValues);
+
+
 
                             //store the sorted value from list to json array
-                            JSONArray sortedJson = new JSONArray();
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                sortedJson.put(jsonValues.get(i));
-                            }
+                            JSONArray sortedJson =  sortJson(jsonArray,"name");
+
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                sortedJson.put(jsonValues.get(i));
+//                            }
 
                             //function that groups data by it's list ID
                             groupDataByListID(sortedJson);
@@ -104,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
 
     //function that sorts JSON object by it's key
     private void sortDataByName(List<JSONObject> jsonValues) {
+
         Collections.sort( jsonValues, new Comparator<JSONObject>() {
             private static final String KEY_NAME = "name";
 
@@ -186,5 +193,66 @@ public class HomeActivity extends AppCompatActivity implements IDRecyclerViewAda
         startActivity(intent);
 
 
+    }
+
+    private static final Pattern PATTERN = Pattern.compile("(\\D*)(\\d*)");
+    public  JSONArray sortJson(JSONArray jsonArraylab,String type) throws JSONException {
+        final String value=type;
+        JSONArray sortedJsonArray = new JSONArray();
+        List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+        for (int i = 0; i < jsonArraylab.length(); i++) {
+            jsonValues.add(jsonArraylab.getJSONObject(i));
+        }
+        Collections.sort( jsonValues, new Comparator<JSONObject>() {
+            //You can change "Name" with "ID" if you want to sort by ID
+            private final String KEY_NAME = value;
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                String valA = new String();
+                String valB = new String();
+                try {
+                    valA = (String) a.getString(KEY_NAME);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    valB = (String) b.getString(KEY_NAME);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Matcher m1 = PATTERN.matcher(valA);
+                Matcher m2 = PATTERN.matcher(valB);
+                // The only way find() could fail is at the end of a string
+                while (m1.find() && m2.find()) {
+                    // matcher.group(1) fetches any non-digits captured by the
+                    // first parentheses in PATTERN.
+                    int nonDigitCompare = m1.group(1).compareTo(m2.group(1));
+                    if (0 != nonDigitCompare) {
+                        return nonDigitCompare;
+                    }
+                    // matcher.group(2) fetches any digits captured by the
+                    // second parentheses in PATTERN.
+                    if (m1.group(2).isEmpty()) {
+                        return m2.group(2).isEmpty() ? 0 : -1;
+                    } else if (m2.group(2).isEmpty()) {
+                        return +1;
+                    }
+                    BigInteger n1 = new BigInteger(m1.group(2));
+                    BigInteger n2 = new BigInteger(m2.group(2));
+                    int numberCompare = n1.compareTo(n2);
+                    if (0 != numberCompare) {
+                        return numberCompare;
+                    }
+                }
+                // Handle if one string is a prefix of the other.
+                // Nothing comes before something.
+                return m1.hitEnd() && m2.hitEnd() ? 0 :
+                        m1.hitEnd()                ? -1 : +1;
+            }
+        });
+        for (int i = 0; i < jsonValues.size(); i++) {
+            sortedJsonArray.put(jsonValues.get(i));
+        }
+        return sortedJsonArray;
     }
 }
